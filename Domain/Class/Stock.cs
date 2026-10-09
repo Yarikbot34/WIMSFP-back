@@ -10,7 +10,7 @@ public class Stock
     public int DeliveryId { get; set; }
     public required Delivery Delivery { get; set; }
     
-    public int Count { get; set; }
+    public decimal Count { get; set; }
     public DateTime ExpirationDate { get; set; }
     
 }

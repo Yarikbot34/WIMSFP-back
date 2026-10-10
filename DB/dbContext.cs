@@ -36,7 +36,7 @@ public class AppDbContext : DbContext
                     .HasForeignKey(s => s.DeliveryId);
                 entity.ToTable("Stocks", table =>
                 {
-                    table.HasCheckConstraint("ST_Count", "Count > 0");
+                    table.HasCheckConstraint("ST_Count", "\"Count\" > 0");
                 });
             }
         );

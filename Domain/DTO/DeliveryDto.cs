@@ -5,5 +5,5 @@ public class DeliveryDto
 {
     public required string Number { get; set; }
     public DateTime DateReceived { get; set; }
-    public required List<Stock> ReceivedProducts { get; set; }
+    public required List<ResProductDto> ReceivedProducts { get; set; }
 }

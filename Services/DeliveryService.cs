@@ -43,6 +43,7 @@ public class DeliveryService : IDeliveryService
                 ExpirationDate = product.ExpirationDate,
                 Count = product.Count
             };
+            stocks.Add(st);
         }
         
         await _deliveryR.CreateAsync(delivery);

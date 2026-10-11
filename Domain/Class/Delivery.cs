@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Domain.DTO;
 
 namespace Domain.Class;
@@ -8,6 +9,9 @@ public class Delivery
     public required string Number { get; set; }
     public DateTime DateReceived { get; set; }
 
+    public Delivery(){}
+
+    [SetsRequiredMembers]
     public Delivery(DeliveryDto dto)
     {
         Id = 0;

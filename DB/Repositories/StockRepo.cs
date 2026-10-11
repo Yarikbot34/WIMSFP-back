@@ -47,6 +47,12 @@ public class StockRepo : IStockRepo
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task CreateRangeAsync(List<Stock> stocks)
+    {
+        _dbContext.Stocks.AddRange(stocks);
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task UpdateAsync(Stock stock)
     {
         _dbContext.Stocks.Update(stock);

@@ -9,6 +9,7 @@ public interface IStockRepo
     public Task<List<Stock>> GetByDeliveryId(int deliveryId);
     
     public Task CreateAsync(Stock stock);
+    public Task CreateRangeAsync(List<Stock> stocks);
     public Task UpdateAsync(Stock stock);
     
     public Task DeleteAsync(Stock stock);

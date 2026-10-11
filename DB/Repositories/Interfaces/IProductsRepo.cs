@@ -7,6 +7,7 @@ public interface IProductsRepo
     Task<List<Product>> GetAllAsync();
     Task<Product?> GetByIdAsync(int id);
     Task<Product?> GetByNameAsync(string name);
+    Task<List<Product>> GetByNameListAsync(List<string> names);
     
     Task AddAsync(Product product);
     Task UpdateAsync(Product product);

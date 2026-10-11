@@ -31,6 +31,14 @@ public class ProductsRepo : IProductsRepo
         return answ;
     }
 
+    public async Task<List<Product>> GetByNameListAsync(List<string> names)
+    {
+        var answ = await _dbContext.Products
+            .Where(p => names.Contains(p.Name))
+            .ToListAsync();
+        return answ;
+    }
+
 
     public async Task AddAsync(Product product)
     {

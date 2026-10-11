@@ -41,7 +41,107 @@ namespace DB.Migrations
 
                     b.HasAlternateKey("Number");
 
-                    b.ToTable("Deliveries", (string)null);
+                    b.ToTable("Deliveries");
+                });
+
+            modelBuilder.Entity("Domain.Class.Dish", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Available")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Name");
+
+                    b.ToTable("Dishes");
+                });
+
+            modelBuilder.Entity("Domain.Class.DishIngredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DishId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("DishIngredients", t =>
+                        {
+                            t.HasCheckConstraint("DI_Count", "\"Amount\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Class.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Domain.Class.OrderObj", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DishId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderObjs");
                 });
 
             modelBuilder.Entity("Domain.Class.Product", b =>
@@ -63,7 +163,7 @@ namespace DB.Migrations
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Domain.Class.Stock", b =>
@@ -98,6 +198,44 @@ namespace DB.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Class.DishIngredient", b =>
+                {
+                    b.HasOne("Domain.Class.Dish", "Dish")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Class.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Class.OrderObj", b =>
+                {
+                    b.HasOne("Domain.Class.Dish", "Dish")
+                        .WithMany()
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Class.Order", "Order")
+                        .WithMany("Objs")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Domain.Class.Stock", b =>
                 {
                     b.HasOne("Domain.Class.Delivery", "Delivery")
@@ -115,6 +253,16 @@ namespace DB.Migrations
                     b.Navigation("Delivery");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Class.Dish", b =>
+                {
+                    b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("Domain.Class.Order", b =>
+                {
+                    b.Navigation("Objs");
                 });
 #pragma warning restore 612, 618
         }

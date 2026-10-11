@@ -56,24 +56,25 @@ public class AppDbContext : DbContext
             entity.HasKey(d => d.Id);
             entity.HasAlternateKey(d => d.Name);
             entity.HasMany(d => d.Ingredients)
-                .WithOne()
-                .HasForeignKey(d => d.DishId);
+                .WithOne(di => di.Dish) 
+                .HasForeignKey(di => di.DishId);
         });
 
         modelBuilder.Entity<DishIngredient>(entity =>
+        {
+            entity.HasKey(d => d.Id);
+    
+            entity.HasOne(d => d.Product)
+                .WithMany()
+                .HasForeignKey(d => d.ProductId);
+            
+            entity.HasOne(d => d.Dish)
+                .WithMany(d => d.Ingredients) 
+                .HasForeignKey(d => d.DishId);
+            entity.ToTable(table =>
             {
-                entity.HasKey(d => d.Id);
-                entity.HasOne(d => d.Product)
-                    .WithMany()
-                    .HasForeignKey(d => d.ProductId);
-                entity.HasOne(d => d.Dish)
-                    .WithOne()
-                    .HasForeignKey<DishIngredient>(d => d.DishId);
-                
-                entity.ToTable(table =>
-                {
-                    table.HasCheckConstraint("DI_Count", "\"Amount\" > 0");
-                });
+                table.HasCheckConstraint("DI_Count", "\"Amount\" > 0");
+            });
         });
 
         modelBuilder.Entity<Order>(entity =>

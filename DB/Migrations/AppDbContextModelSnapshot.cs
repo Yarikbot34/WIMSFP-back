@@ -41,7 +41,7 @@ namespace DB.Migrations
 
                     b.HasAlternateKey("Number");
 
-                    b.ToTable("Deliveries");
+                    b.ToTable("Deliveries", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Class.Product", b =>
@@ -63,7 +63,7 @@ namespace DB.Migrations
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Class.Stock", b =>

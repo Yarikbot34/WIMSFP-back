@@ -1,11 +1,25 @@
 using DB;
+using DB.Repositories;
+using DB.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Services;
+using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<IProductsRepo, ProductsRepo>();
+builder.Services.AddScoped<IStockRepo, StockRepo>();
+builder.Services.AddScoped<IDeliveryRepo, DeliveryRepo>();
+builder.Services.AddScoped<IDishRepo, DishRepo>();
+builder.Services.AddScoped<IOrderRepo, OrderRepo>();
+builder.Services.AddScoped<IOrderObjRepo, OrderObjRepo>();
+builder.Services.AddScoped<IDishIngredientRepo, DishIngredientRepo>();
+
+builder.Services.AddScoped<IDeliveryService, DeliveryService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -27,6 +27,16 @@ public class StockRepo : IStockRepo
         return answ;
     }
 
+    public async Task<List<Stock>> GetAvailableAsync()
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s => s.ExpirationDate > DateTime.Now && s.Count > 0)
+            .Include(s => s.Product)
+            .AsNoTracking()
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task<Stock?> GetByIdAsync(int id)
     {
         var answ = await _dbContext.Stocks.FindAsync(id);

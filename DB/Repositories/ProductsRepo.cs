@@ -43,6 +43,7 @@ public class ProductsRepo : IProductsRepo
     public async Task AddAsync(Product product)
     {
         await _dbContext.Products.AddAsync(product);
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(Product product)

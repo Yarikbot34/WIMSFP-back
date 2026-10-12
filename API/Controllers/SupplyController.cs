@@ -26,4 +26,25 @@ public class SupplyController : ControllerBase
             return BadRequest(ex.StackTrace);
         }
     }
+
+    [HttpGet("GetDeliveries")]
+    public async Task<IActionResult> GetDeliveriesAsync()
+    {
+            var deliveries = await _deliveryService.GetDeliveriesAsync();
+            return Ok(deliveries);
+        
+    }
+
+    [HttpGet("GetDelivery/{number}")]
+    public async Task<IActionResult> GetDeliveryByNumberAsync(string number)
+    {
+        try
+        {
+            var delivery = await _deliveryService.GetDeliveryByNumberAsync(number);
+            return Ok(delivery);
+        } catch  (Exception ex)
+        {
+            return BadRequest(ex.StackTrace);
+        }
+    }
 }

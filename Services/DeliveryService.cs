@@ -1,4 +1,3 @@
-using DB.Repositories;
 using DB.Repositories.Interfaces;
 using Domain.Class;
 using Domain.DTO;
@@ -48,5 +47,40 @@ public class DeliveryService : IDeliveryService
         
         await _deliveryR.CreateAsync(delivery);
         await _stockR.CreateRangeAsync(stocks);
+    }
+
+    public async Task<List<DeliveryDto>> GetDeliveriesAsync()
+    {
+        var deliveries = await _deliveryR.GetAllAsync();
+
+        List<DeliveryDto> answ = new();
+        foreach (var delivery in deliveries)
+        {
+            var stocks = await _stockR.GetByDeliveryId(delivery.Id);
+            answ.Add(new DeliveryDto
+            {
+                Number = delivery.Number,
+                DateReceived = delivery.DateReceived,
+                ReceivedProducts = stocks.Select( x => new ResProductDto(x)).ToList()
+            });
+        }
+
+        return answ;
+    }
+
+    public async Task<DeliveryDto> GetDeliveryByNumberAsync(string number)
+    {
+        var delivery = await _deliveryR.GetByNumberAsync(number);
+        if (delivery is null) throw new Exception("Delivery not found");
+
+        var stocks = await _stockR.GetByDeliveryId(delivery.Id);
+
+        return new DeliveryDto
+        {
+            Number = delivery.Number,
+            DateReceived = delivery.DateReceived,
+            ReceivedProducts = stocks.Select(x => new ResProductDto(x)).ToList()
+            
+        };
     }
 }

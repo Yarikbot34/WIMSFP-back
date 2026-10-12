@@ -48,6 +48,9 @@ public class StockRepo : IStockRepo
     {
         var answ = await _dbContext.Stocks
             .Where(s => s.DeliveryId == deliveryId)
+            .Include(s => s.Delivery)
+            .Include(s => s.Product)
+            .AsNoTracking()
             .ToListAsync();
         return answ;
     }

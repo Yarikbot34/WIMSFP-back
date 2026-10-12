@@ -21,6 +21,7 @@ builder.Services.AddScoped<IDishIngredientRepo, DishIngredientRepo>();
 
 builder.Services.AddScoped<IDeliveryService, DeliveryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IStockService, StockService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

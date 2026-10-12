@@ -23,7 +23,7 @@ public class SupplyController : ControllerBase
             return Ok();
         } catch  (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(ex.StackTrace);
         }
     }
 }

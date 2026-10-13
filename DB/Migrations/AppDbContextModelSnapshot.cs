@@ -37,9 +37,14 @@ namespace DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasAlternateKey("Number");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Deliveries");
                 });
@@ -106,7 +111,7 @@ namespace DB.Migrations
 
                     b.ToTable("DishIngredients", t =>
                         {
-                            t.HasCheckConstraint("DI_Count", "\"Amount\" > 0");
+                            t.HasCheckConstraint("DI_Count", "\"Amount\" >= 0");
                         });
                 });
 
@@ -211,8 +216,40 @@ namespace DB.Migrations
 
                     b.ToTable("Stocks", null, t =>
                         {
-                            t.HasCheckConstraint("ST_Count", "\"Count\" > 0");
+                            t.HasCheckConstraint("ST_Count", "\"Count\" >= 0");
                         });
+                });
+
+            modelBuilder.Entity("Domain.Class.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("Domain.Class.Delivery", b =>
+                {
+                    b.HasOne("Domain.Class.Supplier", "Supplier")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Domain.Class.DishIngredient", b =>
@@ -280,6 +317,11 @@ namespace DB.Migrations
             modelBuilder.Entity("Domain.Class.Order", b =>
                 {
                     b.Navigation("Objs");
+                });
+
+            modelBuilder.Entity("Domain.Class.Supplier", b =>
+                {
+                    b.Navigation("Deliveries");
                 });
 #pragma warning restore 612, 618
         }

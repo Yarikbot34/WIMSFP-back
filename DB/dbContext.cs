@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<DishIngredient> DishIngredients { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderObj> OrderObjs { get; set; }
+    public DbSet<Supplier> Suppliers { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
@@ -40,7 +41,7 @@ public class AppDbContext : DbContext
                     .HasForeignKey(s => s.DeliveryId);
                 entity.ToTable("Stocks", table =>
                 {
-                    table.HasCheckConstraint("ST_Count", "\"Count\" > 0");
+                    table.HasCheckConstraint("ST_Count", "\"Count\" >= 0");
                 });
             }
         );
@@ -49,6 +50,9 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(d => d.Id);
             entity.HasAlternateKey(d => d.Number);
+            entity.HasOne(d => d.Supplier)
+                .WithMany(s => s.Deliveries)
+                .HasForeignKey(d => d.SupplierId);
         });
 
         modelBuilder.Entity<Dish>(entity =>
@@ -73,7 +77,7 @@ public class AppDbContext : DbContext
                 .HasForeignKey(d => d.DishId);
             entity.ToTable(table =>
             {
-                table.HasCheckConstraint("DI_Count", "\"Amount\" > 0");
+                table.HasCheckConstraint("DI_Count", "\"Amount\" >= 0");
             });
         });
 

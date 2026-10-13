@@ -238,6 +238,8 @@ namespace DB.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("Name");
+
                     b.ToTable("Suppliers");
                 });
 

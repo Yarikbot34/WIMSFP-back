@@ -99,5 +99,12 @@ public class AppDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(o => o.DishId);
         });
+
+        modelBuilder.Entity<Supplier>(entity =>
+            {
+                entity.HasKey(s => s.Id);
+                entity.HasAlternateKey(s => s.Name);
+            }
+        );
     }
 }

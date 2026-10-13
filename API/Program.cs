@@ -18,6 +18,7 @@ builder.Services.AddScoped<IDishRepo, DishRepo>();
 builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderObjRepo, OrderObjRepo>();
 builder.Services.AddScoped<IDishIngredientRepo, DishIngredientRepo>();
+builder.Services.AddScoped<ISupplierRepo, SupplierRepo>();
 
 builder.Services.AddScoped<IDeliveryService, DeliveryService>();
 builder.Services.AddScoped<IProductService, ProductService>();

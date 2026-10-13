@@ -5,6 +5,7 @@ namespace DB.Repositories.Interfaces;
 public interface IOrderRepo
 {
     Task<List<Order>> GetAllAsync();
+    Task<List<Order>> GetAllWithDishesAsync();
     Task<Order?> GetByIdAsync(int id);
     Task<List<Order>> GetByStatusAsync(Order.Status status);
 

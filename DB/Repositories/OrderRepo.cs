@@ -19,6 +19,16 @@ public class OrderRepo : IOrderRepo
         return answ;
     }
 
+    public async Task<List<Order>> GetAllWithDishesAsync()
+    {
+        var answ = await _dbContext.Orders
+            .Include(o => o.Objs)
+                .ThenInclude(o => o.Dish)
+            .AsNoTracking()
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task<Order?> GetByIdAsync(int id)
     {
         var answ = await _dbContext.Orders.FindAsync(id);

@@ -32,6 +32,22 @@ public class DishRepo : IDishRepo
         return answ;
     }
 
+    public async Task<List<Dish>> GetByNamesWithIngredientsAsync(List<string> names)
+    {
+        var answ = await _dbContext.Dishes
+            .Where(d => names.Contains(d.Name))
+            .Include(d => d.Ingredients)
+                .ThenInclude(i => i.Product)
+            .ToListAsync();
+        return answ;
+    }
+
+    public async Task UpdateRangeAsync(List<Dish> dishes)
+    {
+        _dbContext.Dishes.UpdateRange(dishes);
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task CreateAsync(Dish dish)
     {
         _dbContext.Dishes.Add(dish);

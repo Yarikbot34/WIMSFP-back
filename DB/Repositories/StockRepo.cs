@@ -27,6 +27,54 @@ public class StockRepo : IStockRepo
         return answ;
     }
 
+    public async Task<List<int>> TryConsumeAvailableAmountsAsync(Dictionary<int, decimal> requiredAmounts)
+    {
+        if (requiredAmounts.Count == 0) return new List<int>();
+
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(
+            System.Data.IsolationLevel.Serializable);
+
+        var productIds = requiredAmounts.Keys.ToList();
+        var stocks = await _dbContext.Stocks
+            .Where(s => productIds.Contains(s.ProductId)
+                        && s.Status == Stock.StockStatus.Active
+                        && s.ExpirationDate > DateTime.UtcNow
+                        && s.Count > 0)
+            .OrderBy(s => s.ExpirationDate)
+            .ToListAsync();
+
+        var availableAmounts = stocks
+            .GroupBy(s => s.ProductId)
+            .ToDictionary(group => group.Key, group => group.Sum(s => s.Count));
+
+        var insufficientProductIds = requiredAmounts
+            .Where(item => !availableAmounts.TryGetValue(item.Key, out var amount) || amount < item.Value)
+            .Select(item => item.Key)
+            .ToList();
+
+        if (insufficientProductIds.Count > 0)
+        {
+            await transaction.CommitAsync();
+            return insufficientProductIds;
+        }
+
+        foreach (var requirement in requiredAmounts)
+        {
+            var remaining = requirement.Value;
+            foreach (var stock in stocks.Where(s => s.ProductId == requirement.Key))
+            {
+                var consumed = Math.Min(stock.Count, remaining);
+                stock.Count -= consumed;
+                remaining -= consumed;
+                if (remaining == 0) break;
+            }
+        }
+
+        await _dbContext.SaveChangesAsync();
+        await transaction.CommitAsync();
+        return insufficientProductIds;
+    }
+
     public async Task<List<Stock>> GetAvailableAsync()
     {
         var answ = await _dbContext.Stocks

@@ -24,6 +24,7 @@ builder.Services.AddScoped<IDeliveryService, DeliveryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 
 builder.Services.AddHostedService<StockExpirationService>();
 

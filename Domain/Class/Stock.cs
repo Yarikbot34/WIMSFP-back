@@ -10,7 +10,15 @@ public class Stock
     public int DeliveryId { get; set; }
     public required Delivery Delivery { get; set; }
     
+    public decimal InitialCount { get; set; }
     public decimal Count { get; set; }
     public DateTime ExpirationDate { get; set; }
+    public StockStatus Status { get; set; }
     
+    public enum StockStatus
+    {
+        Active,
+        Expired,
+        Decommissioned
+    }
 }

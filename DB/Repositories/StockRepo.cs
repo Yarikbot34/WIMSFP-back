@@ -30,7 +30,7 @@ public class StockRepo : IStockRepo
     public async Task<List<Stock>> GetAvailableAsync()
     {
         var answ = await _dbContext.Stocks
-            .Where(s => s.ExpirationDate > DateTime.UtcNow && s.Count > 0)
+            .Where(s => s.Status == Stock.StockStatus.Active && s.ExpirationDate > DateTime.UtcNow && s.Count > 0)
             .Include(s => s.Product)
             .Include(s => s.Delivery)
             .AsNoTracking()

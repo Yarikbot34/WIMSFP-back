@@ -40,7 +40,9 @@ public class DeliveryService : IDeliveryService
                 Product = pr,
                 Delivery =  delivery,
                 ExpirationDate = product.ExpirationDate,
-                Count = product.Count
+                Count = product.Count,
+                InitialCount = product.Count,
+                Status = Stock.StockStatus.Active,
             };
             stocks.Add(st);
         }

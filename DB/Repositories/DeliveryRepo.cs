@@ -15,19 +15,22 @@ public class DeliveryRepo : IDeliveryRepo
 
     public async Task<List<Delivery>> GetAllAsync()
     {
-        var answ = await _dbContext.Deliveries.ToListAsync();
+        var answ = await _dbContext.Deliveries.Include(d => d.Supplier).ToListAsync();
         return answ;
     }
 
     public async Task<Delivery?> GetByIdAsync(int id)
     {
-        var answ = await _dbContext.Deliveries.FindAsync(id);
+        var answ = await _dbContext.Deliveries
+            .Include(d => d.Supplier)
+            .FirstAsync(d => d.Id == id);
         return answ;
     }
 
     public async Task<Delivery?> GetByNumberAsync(string number)
     {
         var answ = await _dbContext.Deliveries
+            .Include(d => d.Supplier)
             .FirstOrDefaultAsync(d => d.Number == number);
         return answ;
     }
@@ -36,6 +39,7 @@ public class DeliveryRepo : IDeliveryRepo
     {
         var answ = await _dbContext.Deliveries
             .Where(d => DateOnly.FromDateTime(d.DateReceived) == date)
+            .Include(d => d.Supplier)
             .ToListAsync();
         return answ;
     }

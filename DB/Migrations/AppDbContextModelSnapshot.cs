@@ -83,7 +83,10 @@ namespace DB.Migrations
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("Dishes");
+                    b.ToTable("Dishes", t =>
+                        {
+                            t.HasCheckConstraint("Dish_Price", "\"Price\" >= 0");
+                        });
                 });
 
             modelBuilder.Entity("Domain.Class.DishIngredient", b =>
@@ -129,9 +132,15 @@ namespace DB.Migrations
                     b.Property<int>("OrderStatus")
                         .HasColumnType("integer");
 
+                    b.Property<double>("PayAmount")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", t =>
+                        {
+                            t.HasCheckConstraint("OR_Price", "\"PayAmount\" > 0");
+                        });
                 });
 
             modelBuilder.Entity("Domain.Class.OrderObj", b =>
@@ -148,6 +157,12 @@ namespace DB.Migrations
                     b.Property<int>("DishId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("HasDiscount")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
@@ -157,7 +172,10 @@ namespace DB.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderObjs");
+                    b.ToTable("OrderObjs", t =>
+                        {
+                            t.HasCheckConstraint("ORB_Price", "\"ItemPrice\" > 0");
+                        });
                 });
 
             modelBuilder.Entity("Domain.Class.Product", b =>

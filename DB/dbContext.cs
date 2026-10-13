@@ -62,6 +62,10 @@ public class AppDbContext : DbContext
             entity.HasMany(d => d.Ingredients)
                 .WithOne(di => di.Dish) 
                 .HasForeignKey(di => di.DishId);
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint("Dish_Price", "\"Price\" >= 0");
+            });
         });
 
         modelBuilder.Entity<DishIngredient>(entity =>
@@ -87,6 +91,10 @@ public class AppDbContext : DbContext
             entity.HasMany(o => o.Objs)
                 .WithOne(o => o.Order)
                 .HasForeignKey(o => o.OrderId);
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint("OR_Price", "\"PayAmount\" > 0");
+            });
         });
 
         modelBuilder.Entity<OrderObj>(entity =>
@@ -98,6 +106,10 @@ public class AppDbContext : DbContext
             entity.HasOne(o => o.Dish)
                 .WithMany()
                 .HasForeignKey(o => o.DishId);
+            entity.ToTable(table =>
+            {
+                table.HasCheckConstraint("ORB_Price", "\"ItemPrice\" > 0");
+            });
         });
 
         modelBuilder.Entity<Supplier>(entity =>

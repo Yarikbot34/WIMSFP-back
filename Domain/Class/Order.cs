@@ -6,12 +6,11 @@ public class Order
     public DateTime Created { get; set; }
     public Status OrderStatus { get; set; }
     public List<OrderObj> Objs { get; set; }
+    public double PayAmount { get; set; }
         
         
     public enum Status
     {
-        New,
-        Processing,
         Complete,
         Cancelled
     }

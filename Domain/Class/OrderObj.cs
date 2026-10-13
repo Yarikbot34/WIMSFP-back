@@ -10,4 +10,6 @@ public class OrderObj
     public Dish Dish { get; set; }
     
     public int Count { get; set; }
+    public decimal ItemPrice { get; set; }
+    public bool HasDiscount {get; set;}
 }

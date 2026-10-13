@@ -4,6 +4,8 @@ public class Dish
 {
     public int Id { get; set; }
     public required string Name { get; set; }
+    public required string ImageUrl { get; set; }
+    public required string Category { get; set; } = "Разное";
     public string Description { get; set; } = "";
     public required List<DishIngredient> Ingredients { get; set; }
 

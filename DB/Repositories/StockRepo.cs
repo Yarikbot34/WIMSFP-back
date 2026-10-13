@@ -38,6 +38,14 @@ public class StockRepo : IStockRepo
         return answ;
     }
 
+    public async Task<List<Stock>> GetExpiredActiveAsync()
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s => s.Status == Stock.StockStatus.Active && s.ExpirationDate <= DateTime.UtcNow)
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task<Stock?> GetByIdAsync(int id)
     {
         var answ = await _dbContext.Stocks.FindAsync(id);

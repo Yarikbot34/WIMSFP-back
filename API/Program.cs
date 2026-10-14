@@ -51,6 +51,8 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
 }
 
+await app.Services.SeedAdminAsync();
+
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();

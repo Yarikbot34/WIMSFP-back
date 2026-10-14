@@ -93,7 +93,7 @@ public class StockRepo : IStockRepo
             s.Status == Stock.StockStatus.Active &&
             s.Count > 0 &&
             s.ExpirationDate > DateTime.UtcNow &&
-            s.ExpirationDate - DateTime.UtcNow < TimeSpan.FromDays(1))
+            s.ExpirationDate - DateTime.UtcNow <= TimeSpan.FromDays(2))
             .Include(s => s.Product)
             .Include(s => s.Delivery)
             .AsNoTracking()

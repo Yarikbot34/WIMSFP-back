@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<OrderObj> OrderObjs { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<DishPriority> DishPriorities { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
@@ -124,6 +125,18 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(s => s.Id);
             entity.HasAlternateKey(s => s.Name);
+        });
+
+        modelBuilder.Entity<DishPriority>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.HasOne<Dish>()
+                .WithMany()
+                .HasForeignKey(p => p.DishId);
+            entity.ToTable("DishPriorities", table =>
+            {
+                table.HasCheckConstraint("DP_Priority", "\"Priority\" >= 0 AND \"Priority\" <= 1");
+            });
         });
     }
 }

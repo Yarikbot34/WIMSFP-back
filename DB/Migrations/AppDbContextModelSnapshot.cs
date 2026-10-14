@@ -124,6 +124,30 @@ namespace DB.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Class.DishPriority", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DishId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Priority")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DishId");
+
+                    b.ToTable("DishPriorities", null, t =>
+                        {
+                            t.HasCheckConstraint("DP_Priority", "\"Priority\" >= 0 AND \"Priority\" <= 1");
+                        });
+                });
+
             modelBuilder.Entity("Domain.Class.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -339,6 +363,15 @@ namespace DB.Migrations
                     b.Navigation("Dish");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Class.DishPriority", b =>
+                {
+                    b.HasOne("Domain.Class.Dish", null)
+                        .WithMany()
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Class.OrderObj", b =>

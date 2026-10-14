@@ -11,24 +11,33 @@ public class DishService : IDishService
     private readonly IDishIngredientRepo _dishIngredientR;
     private readonly IProductsRepo _productsR;
     private readonly IStockRepo _stockR;
+    private readonly IDishPriorityRepo _dishPriorityR;
 
-    public DishService(IDishRepo dishR, IDishIngredientRepo dishIngredientR, IProductsRepo productsR, IStockRepo stockR)
+    public DishService(IDishRepo dishR, IDishIngredientRepo dishIngredientR, IProductsRepo productsR, IStockRepo stockR, IDishPriorityRepo dishPriorityR)
     {
         _stockR = stockR;
         _dishR = dishR;
         _dishIngredientR = dishIngredientR;
         _productsR = productsR;
+        _dishPriorityR = dishPriorityR;
     }
 
     public async Task<MenuDto> GetMenuAsync()
     {
-        await CheckExpiredDishesAsync();
+        await UpdateDishPrioritiesAsync();
         var dishes =  await _dishR.GetAllAsync();
+        var priorities = await _dishPriorityR.GetAllAsync();
+        var popularDishIds = priorities
+            .OrderByDescending(p => p.Priority)
+            .Take(6)
+            .Select(p => p.DishId)
+            .ToHashSet();
+
         var menuDto = new MenuDto();
         foreach (var dish in dishes)
         {
             if (!dish.Available) menuDto.Inaccessible.Add(new DishDto(dish)); 
-            else if (dish.HasAction) menuDto.Popular.Add(new DishDto(dish));
+            else if (popularDishIds.Contains(dish.Id)) menuDto.Popular.Add(new DishDto(dish));
             else menuDto.Main.Add(new DishDto(dish));
         }
         return menuDto;
@@ -132,19 +141,52 @@ public class DishService : IDishService
         await _dishR.UpdateAsync(dish);
     }
     
-    private async Task CheckExpiredDishesAsync()
+    private async Task UpdateDishPrioritiesAsync()
     {
-        var criticalStoks = await _stockR.GetLastDayExpiredAsync();
-        if (criticalStoks.Count == 0) return;
-        var productsIds = criticalStoks.Select(x => x.ProductId).Distinct().ToList();
+        var expiringStocks = await _stockR.GetExpiringSoonAsync();
+        var expiringProductIds = expiringStocks
+            .Select(s => s.ProductId)
+            .Distinct()
+            .ToHashSet();
 
         var dishes = await _dishR.GetAllWithIngredientsAsync();
+        var existingPriorities = await _dishPriorityR.GetAllAsync();
+        var prioritiesByDishId = existingPriorities
+            .ToDictionary(p => p.DishId);
+
+        var toCreate = new List<DishPriority>();
+        var toUpdate = new List<DishPriority>();
+
         foreach (var dish in dishes)
         {
-            dish.HasAction = dish.Ingredients.Any(i => productsIds.Contains(i.ProductId));
+            var priority = CalculatePriority(dish, expiringProductIds);
+
+            if (prioritiesByDishId.TryGetValue(dish.Id, out var existing))
+            {
+                existing.Priority = priority;
+                toUpdate.Add(existing);
+            }
+            else
+            {
+                toCreate.Add(new DishPriority
+                {
+                    DishId = dish.Id,
+                    Priority = priority
+                });
+            }
         }
 
-        await _dishR.UpdateRangeAsync(dishes);
+        if (toCreate.Count > 0) await _dishPriorityR.CreateRangeAsync(toCreate);
+        if (toUpdate.Count > 0) await _dishPriorityR.UpdateRangeAsync(toUpdate);
+    }
 
+    private static decimal CalculatePriority(Dish dish, HashSet<int> expiringProductIds)
+    {
+        if (dish.Ingredients.Count == 0) return 0m;
+
+        var expiringCount = dish.Ingredients
+            .Count(i => expiringProductIds.Contains(i.ProductId));
+
+        return (decimal)expiringCount / dish.Ingredients.Count;
     }
 }

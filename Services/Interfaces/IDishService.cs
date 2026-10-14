@@ -6,6 +6,7 @@ public interface IDishService
 {
     Task<MenuDto> GetMenuAsync();
     Task<DishDto> GetDishAsync(string dishName);
+    Task<List<DishBigDto>> GetAllDishesAsync();
 
     Task AddDishAsync(DishBigDto dto);
     Task UpdateDishAsync(DishBigDto dto);

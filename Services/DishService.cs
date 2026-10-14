@@ -50,6 +50,12 @@ public class DishService : IDishService
         return new DishDto(dish);
     }
 
+    public async Task<List<DishBigDto>> GetAllDishesAsync()
+    {
+        var dishes = await _dishR.GetAllWithIngredientsAsync();
+        return dishes.Select(ToBigDto).ToList();
+    }
+
     public async Task AddDishAsync(DishBigDto dto)
     {
         if (dto.Ingredients.Count == 0) throw new Exception("No ingredients provided");
@@ -188,5 +194,25 @@ public class DishService : IDishService
             .Count(i => expiringProductIds.Contains(i.ProductId));
 
         return (decimal)expiringCount / dish.Ingredients.Count;
+    }
+
+    private static DishBigDto ToBigDto(Dish dish)
+    {
+        return new DishBigDto
+        {
+            Name = dish.Name,
+            Description = dish.Description,
+            ImageUrl = dish.ImageUrl,
+            Category = dish.Category,
+            Price = dish.Price,
+            Available = dish.Available,
+            Ingredients = dish.Ingredients
+                .Select(i => new DishIngredientDto
+                {
+                    Product = i.Product.Name,
+                    Count = i.Amount
+                })
+                .ToList()
+        };
     }
 }

@@ -15,6 +15,13 @@ public class DishController : ControllerBase
         _dishService = dishService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllDishesAsync()
+    {
+        var dishes = await _dishService.GetAllDishesAsync();
+        return Ok(dishes);
+    }
+
     [HttpPost("AddDish")]
     public async Task<IActionResult> AddDishAsync([FromBody] DishBigDto dto)
     {

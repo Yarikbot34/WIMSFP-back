@@ -1,3 +1,4 @@
+using API.BuilderFuctions;
 using DB;
 using DB.Repositories;
 using DB.Repositories.Interfaces;
@@ -29,9 +30,14 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddHostedService<StockExpirationService>();
 
+builder.SetupJWT();
+
+builder.Services.AddAuthentication();
+builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 

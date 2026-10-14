@@ -10,6 +10,7 @@ public class User
     public enum UserRole
     {
         Admin,
+        Manager,
         Acceptor,
         Waiter
     }

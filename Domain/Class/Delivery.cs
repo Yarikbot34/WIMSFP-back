@@ -11,6 +11,7 @@ public class Delivery
     
     public int SupplierId { get; set; }
     public Supplier Supplier { get; set; }
+    public decimal Price { get; set; }
 
     public Delivery(){}
 
@@ -20,5 +21,6 @@ public class Delivery
         Id = 0;
         Number = dto.Number;
         DateReceived = dto.DateReceived;
+        Price = dto.Price;
     }
 }

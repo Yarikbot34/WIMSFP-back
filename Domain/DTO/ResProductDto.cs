@@ -9,6 +9,7 @@ public class ResProductDto
     public required string ProductName { get; set; }
     public DateTime ExpirationDate { get; set; }
     public decimal Count { get; set; }
+    public decimal ItemPrice { get; set; }
     
     [JsonConstructor]
     public ResProductDto(){}

@@ -10,18 +10,24 @@ public class DeliveryService : IDeliveryService
     private readonly IDeliveryRepo _deliveryR;
     private readonly IStockRepo _stockR;
     private readonly IProductsRepo _productsR;
+    private readonly ISupplierRepo _supplierR;
     
-    public DeliveryService(IDeliveryRepo deliveryR, IStockRepo stockR,  IProductsRepo productsR){
+    public DeliveryService(IDeliveryRepo deliveryR, IStockRepo stockR,  IProductsRepo productsR, ISupplierRepo supplierR){
         _deliveryR = deliveryR;
         _stockR = stockR;
         _productsR = productsR;
+        _supplierR = supplierR;
     }
 
     public async Task WriteDeliveryAsync(DeliveryDto dto)
     {
         if (dto.ReceivedProducts.Count == 0) throw new Exception("No products received");
         
+        var supplier = await _supplierR.GetByNameAsync(dto.SupplierName);
+        if (supplier is null) throw new Exception("Supplier not found");
+        
         Delivery delivery = new Delivery(dto);
+        delivery.Supplier = supplier;
         
         var productNames = dto.ReceivedProducts
             .Select(p => p.ProductName)
@@ -43,6 +49,7 @@ public class DeliveryService : IDeliveryService
                 Count = product.Count,
                 InitialCount = product.Count,
                 Status = Stock.StockStatus.Active,
+                ItemPrice = product.ItemPrice
             };
             stocks.Add(st);
         }

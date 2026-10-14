@@ -37,6 +37,9 @@ namespace DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
                     b.Property<int>("SupplierId")
                         .HasColumnType("integer");
 
@@ -218,6 +221,9 @@ namespace DB.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("InitialCount")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("ItemPrice")
                         .HasColumnType("numeric");
 
                     b.Property<int>("ProductId")

@@ -14,6 +14,7 @@ public class Stock
     public decimal Count { get; set; }
     public DateTime ExpirationDate { get; set; }
     public StockStatus Status { get; set; }
+    public decimal ItemPrice { get; set; }
     
     public enum StockStatus
     {

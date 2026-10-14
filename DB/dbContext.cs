@@ -133,6 +133,8 @@ public class AppDbContext : DbContext
             entity.HasOne<Dish>()
                 .WithMany()
                 .HasForeignKey(p => p.DishId);
+            entity.HasIndex(p => p.DishId)
+                .IsUnique();
             entity.ToTable("DishPriorities", table =>
             {
                 table.HasCheckConstraint("DP_Priority", "\"Priority\" >= 0 AND \"Priority\" <= 1");

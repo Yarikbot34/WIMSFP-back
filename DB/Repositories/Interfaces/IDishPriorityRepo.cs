@@ -11,6 +11,7 @@ public interface IDishPriorityRepo
     Task UpdateAsync(DishPriority dishPriority);
     Task CreateRangeAsync(List<DishPriority> dishPriorities);
     Task UpdateRangeAsync(List<DishPriority> dishPriorities);
+    Task DeleteRangeAsync(List<DishPriority> dishPriorities);
 
     Task DeleteAsync(DishPriority dishPriority);
 }

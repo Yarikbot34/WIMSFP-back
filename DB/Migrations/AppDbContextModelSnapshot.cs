@@ -140,7 +140,8 @@ namespace DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DishId");
+                    b.HasIndex("DishId")
+                        .IsUnique();
 
                     b.ToTable("DishPriorities", null, t =>
                         {

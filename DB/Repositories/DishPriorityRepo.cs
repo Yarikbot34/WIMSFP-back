@@ -50,6 +50,12 @@ public class DishPriorityRepo : IDishPriorityRepo
         await _dbContext.SaveChangesAsync();
     }
 
+    public async Task DeleteRangeAsync(List<DishPriority> dishPriorities)
+    {
+        _dbContext.DishPriorities.RemoveRange(dishPriorities);
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task DeleteAsync(DishPriority dishPriority)
     {
         _dbContext.DishPriorities.Remove(dishPriority);

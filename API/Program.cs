@@ -27,12 +27,14 @@ builder.Services.AddScoped<IDeliveryService, DeliveryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<IDishPriorityService, DishPriorityService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenCreator, TokenCreator>();
 
 builder.Services.AddHostedService<StockExpirationService>();
+builder.Services.AddHostedService<DishPriorityRecalculationService>();
 
 builder.SetupJWT();
 

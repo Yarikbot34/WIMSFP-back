@@ -71,6 +71,9 @@ namespace DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("HasAction")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("text");

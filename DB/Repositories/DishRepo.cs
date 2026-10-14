@@ -19,6 +19,15 @@ public class DishRepo : IDishRepo
         return answ;
     }
 
+    public async Task<List<Dish>> GetAllWithIngredientsAsync()
+    {
+        var answ = await _dbContext.Dishes
+            .Include(d => d.Ingredients)
+            .ThenInclude(i => i.Product)
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task<Dish?> GetByIdAsync(int id)
     {
         var answ = await _dbContext.Dishes.FindAsync(id);

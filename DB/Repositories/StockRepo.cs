@@ -75,6 +75,17 @@ public class StockRepo : IStockRepo
         return insufficientProductIds;
     }
 
+    public async Task<List<Stock>> GetLastDayExpiredAsync()
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s =>
+            s.Status == Stock.StockStatus.Active && 
+            s.ExpirationDate - DateTime.UtcNow > TimeSpan.FromDays(1))
+            .Include(s => s.Product)
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task<List<Stock>> GetAvailableAsync()
     {
         var answ = await _dbContext.Stocks

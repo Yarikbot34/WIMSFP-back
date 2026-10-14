@@ -282,6 +282,10 @@ namespace DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -289,7 +293,7 @@ namespace DB.Migrations
 
                     b.HasAlternateKey("Name");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Class.Delivery", b =>

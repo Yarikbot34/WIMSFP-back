@@ -46,4 +46,16 @@ public class StockService : IStockService
         }
         return answ;
     }
+
+    public async Task<List<StockDto>> GetExpiredSoonAsync()
+    {
+        var stocks = await _stockR.GetExpiringSoonAsync();
+        return stocks.Select(s => new StockDto(s)).ToList();
+    }
+
+    public async Task<List<StockDto>> GetExpiredAsync()
+    {
+        var stocks = await _stockR.GetExpiredAsync();
+        return stocks.Select(s => new StockDto(s)).ToList();
+    }
 }

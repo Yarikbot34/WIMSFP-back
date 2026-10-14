@@ -80,8 +80,23 @@ public class StockRepo : IStockRepo
         var answ = await _dbContext.Stocks
             .Where(s =>
             s.Status == Stock.StockStatus.Active && 
-            s.ExpirationDate - DateTime.UtcNow > TimeSpan.FromDays(1))
+            s.ExpirationDate - DateTime.UtcNow < TimeSpan.FromDays(1))
             .Include(s => s.Product)
+            .ToListAsync();
+        return answ;
+    }
+
+    public async Task<List<Stock>> GetExpiringSoonAsync()
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s =>
+            s.Status == Stock.StockStatus.Active &&
+            s.Count > 0 &&
+            s.ExpirationDate > DateTime.UtcNow &&
+            s.ExpirationDate - DateTime.UtcNow < TimeSpan.FromDays(1))
+            .Include(s => s.Product)
+            .Include(s => s.Delivery)
+            .AsNoTracking()
             .ToListAsync();
         return answ;
     }
@@ -101,10 +116,22 @@ public class StockRepo : IStockRepo
     {
         var answ = await _dbContext.Stocks
             .Where(s => s.Status == Stock.StockStatus.Active && s.ExpirationDate <= DateTime.UtcNow)
+            .Include(s => s.Product)
+            .Include(s => s.Delivery)
             .ToListAsync();
         return answ;
     }
 
+    public async Task<List<Stock>> GetExpiredAsync()
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s => s.Status == Stock.StockStatus.Expired)
+            .Include(s => s.Product)
+            .Include(s => s.Delivery)
+            .ToListAsync();
+        return answ;
+    }
+    
     public async Task<Stock?> GetByIdAsync(int id)
     {
         var answ = await _dbContext.Stocks.FindAsync(id);

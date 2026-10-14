@@ -20,4 +20,18 @@ public class StockController : ControllerBase
         var answ = await _stockService.GetGroupedStocksAsync();
         return Ok(answ);
     }
+
+    [HttpGet("getExpiredSoon")]
+    public async Task<IActionResult> GetExpiredSoon()
+    {
+        var answ = await _stockService.GetExpiredSoonAsync();
+        return Ok(answ);
+    }
+
+    [HttpGet("getExpired")]
+    public async Task<IActionResult> GetExpired()
+    {
+        var answ = await _stockService.GetExpiredAsync();
+        return Ok(answ);
+    }
 }

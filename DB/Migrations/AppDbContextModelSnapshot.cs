@@ -270,6 +270,28 @@ namespace DB.Migrations
                     b.ToTable("Suppliers");
                 });
 
+            modelBuilder.Entity("Domain.Class.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Name");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("Domain.Class.Delivery", b =>
                 {
                     b.HasOne("Domain.Class.Supplier", "Supplier")

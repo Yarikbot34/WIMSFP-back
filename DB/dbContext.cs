@@ -118,5 +118,11 @@ public class AppDbContext : DbContext
                 entity.HasAlternateKey(s => s.Name);
             }
         );
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(s => s.Id);
+            entity.HasAlternateKey(s => s.Name);
+        });
     }
 }

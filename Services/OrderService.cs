@@ -69,6 +69,10 @@ public class OrderService : IOrderService
         {
             Created = dto.Created == default ? DateTime.UtcNow : dto.Created,
             OrderStatus = orderStatus,
+            CustomerName = dto.CustomerName,
+            ContactPhone = dto.ContactPhone,
+            Format = dto.Format,
+            Comment = dto.Comment,
             Objs = new List<OrderObj>(),
             PayAmount = 0
         };

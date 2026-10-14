@@ -8,6 +8,10 @@ public class OrderDto
     public DateTime Created { get; set; }
     public decimal Payment { get; set; }
     public Order.Status Status { get; set; }
+    public string CustomerName { get; set; }
+    public string ContactPhone { get; set; }
+    public Order.OrderFormat Format { get; set; }
+    public string Comment { get; set; }
     public List<OrderObjDto> Dishes { get; set; } = new();
 
     [JsonConstructor]
@@ -18,6 +22,10 @@ public class OrderDto
         Created = order.Created;
         Payment = (decimal)order.PayAmount;
         Status = order.OrderStatus;
+        CustomerName = order.CustomerName;
+        ContactPhone = order.ContactPhone;
+        Format = order.Format;
+        Comment = order.Comment;
         Dishes = order.Objs.Select(orderObj => new OrderObjDto(orderObj)).ToList();
     }
 }

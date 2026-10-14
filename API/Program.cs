@@ -20,6 +20,7 @@ builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderObjRepo, OrderObjRepo>();
 builder.Services.AddScoped<IDishIngredientRepo, DishIngredientRepo>();
 builder.Services.AddScoped<ISupplierRepo, SupplierRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddScoped<IDeliveryService, DeliveryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -27,6 +28,8 @@ builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IDishService, DishService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenCreator, TokenCreator>();
 
 builder.Services.AddHostedService<StockExpirationService>();
 

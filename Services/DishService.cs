@@ -10,9 +10,11 @@ public class DishService : IDishService
     private readonly IDishRepo _dishR;
     private readonly IDishIngredientRepo _dishIngredientR;
     private readonly IProductsRepo _productsR;
+    private readonly IStockRepo _stockR;
 
-    public DishService(IDishRepo dishR, IDishIngredientRepo dishIngredientR, IProductsRepo productsR)
+    public DishService(IDishRepo dishR, IDishIngredientRepo dishIngredientR, IProductsRepo productsR, IStockRepo stockR)
     {
+        _stockR = stockR;
         _dishR = dishR;
         _dishIngredientR = dishIngredientR;
         _productsR = productsR;
@@ -25,6 +27,7 @@ public class DishService : IDishService
         foreach (var dish in dishes)
         {
             if (!dish.Available) menuDto.Inaccessible.Add(new DishDto(dish)); 
+            else if (dish.HasAction) menuDto.Popular.Add(new DishDto(dish));
             else menuDto.Main.Add(new DishDto(dish));
         }
         return menuDto;
@@ -126,5 +129,21 @@ public class DishService : IDishService
 
         dish.Available = !dish.Available;
         await _dishR.UpdateAsync(dish);
+    }
+    
+    private async Task CheckExpiredDishesAsync()
+    {
+        var criticalStoks = await _stockR.GetLastDayExpiredAsync();
+        if (criticalStoks.Count == 0) return;
+        var productsIds = criticalStoks.Select(x => x.ProductId).Distinct().ToList();
+
+        var dishes = await _dishR.GetAllWithIngredientsAsync();
+        foreach (var dish in dishes)
+        {
+            dish.HasAction = dish.Ingredients.Any(i => productsIds.Contains(i.ProductId));
+        }
+
+        await _dishR.UpdateRangeAsync(dishes);
+
     }
 }

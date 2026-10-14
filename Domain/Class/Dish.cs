@@ -10,5 +10,6 @@ public class Dish
     public required List<DishIngredient> Ingredients { get; set; }
 
     public bool Available { get; set; } = false;
+    public bool HasAction { get; set; } = false;
     public decimal Price { get; set; } = 0;
 }

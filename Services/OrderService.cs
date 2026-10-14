@@ -89,6 +89,7 @@ public class OrderService : IOrderService
         }
 
         await _orderR.CreateAsync(order);
+        if (order.OrderStatus == Order.Status.Cancelled) throw new Exception("Order cancelled");
         return new OrderDto(order);
     }
 

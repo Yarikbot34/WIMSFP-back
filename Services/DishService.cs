@@ -22,6 +22,7 @@ public class DishService : IDishService
 
     public async Task<MenuDto> GetMenuAsync()
     {
+        await CheckExpiredDishesAsync();
         var dishes =  await _dishR.GetAllAsync();
         var menuDto = new MenuDto();
         foreach (var dish in dishes)

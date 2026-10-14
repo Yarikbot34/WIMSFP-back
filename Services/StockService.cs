@@ -7,15 +7,18 @@ namespace Services;
 public class StockService : IStockService
 {
     private readonly IStockRepo _stockR;
+    private readonly IProductsRepo _productsR;
     
-    public StockService(IStockRepo stockR)
+    public StockService(IStockRepo stockR, IProductsRepo productsR)
     {
         _stockR = stockR;
+        _productsR = productsR;
     }
 
     public async Task<List<GroupedStockDto>> GetGroupedStocksAsync()
     {
         var stocks = await _stockR.GetAvailableAsync();
+        var dbProducts = await _productsR.GetAllAsync();
         
         HashSet<string> products = stocks
             .Select(x => x.Product.Name)
@@ -38,6 +41,7 @@ public class StockService : IStockService
             n.LastDelivery = lDelivery;
             n.SumAmount = summ;
             n.Stocks = selection.Select(s => new StockDto(s)).ToList();
+            n.Unit = dbProducts.First(p => p.Name == type).MesUnit.ToString();
             answ.Add(n);
         }
         return answ;

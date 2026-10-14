@@ -20,6 +20,7 @@ public class Stock
     {
         Active,
         Expired,
-        Decommissioned
+        Decommissioned,
+        Spent
     }
 }

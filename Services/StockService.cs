@@ -60,6 +60,12 @@ public class StockService : IStockService
         return stocks.Select(s => new StockDto(s)).ToList();
     }
 
+    public async Task<List<ExpiredStockDto>> GetExpiredStocksAsync()
+    {
+        var stocks = await _stockR.GetExpiredAsync();
+        return stocks.Select(s => new ExpiredStockDto(s)).ToList();
+    }
+
     public async Task WriteOffStockAsync(int id)
     {
         var stock = await _stockR.GetByIdAsync(id);

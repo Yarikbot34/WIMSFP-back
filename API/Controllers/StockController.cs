@@ -38,7 +38,7 @@ public class StockController : ControllerBase
     [HttpGet("GetExpiredStoks")]
     public async Task<IActionResult> GetExpiredStoks()
     {
-        var answ = await _stockService.GetExpiredAsync();
+        var answ = await _stockService.GetExpiredStocksAsync();
         return Ok(answ);
     }
 

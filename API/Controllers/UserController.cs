@@ -1,3 +1,4 @@
+using Domain.Class;
 using Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -13,6 +14,12 @@ public class UserController : ControllerBase
     public UserController(IUserService userService)
     {
         _userService = userService;
+    }
+
+    [HttpGet("getRoles")]
+    public IActionResult GetRoles()
+    {
+        return Ok(Enum.GetNames(typeof(User.UserRole)).ToList());
     }
 
     [HttpGet("getUsers")]

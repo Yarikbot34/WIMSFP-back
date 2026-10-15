@@ -35,6 +35,13 @@ public class SupplyController : ControllerBase
         
     }
 
+    [HttpGet("DeliveryReceivedByMonth")]
+    public async Task<IActionResult> DeliveryReceivedByMonth()
+    {
+        var count = await _deliveryService.DeliveryReceivedByMonthAsync();
+        return Ok(count);
+    }
+
     [HttpGet("GetDelivery/{number}")]
     public async Task<IActionResult> GetDeliveryByNumberAsync(string number)
     {

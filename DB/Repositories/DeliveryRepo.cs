@@ -53,6 +53,12 @@ public class DeliveryRepo : IDeliveryRepo
         return answ;
     }
 
+    public async Task<int> CountReceivedByDateRangeAsync(DateTime fromInclusive, DateTime toInclusive)
+    {
+        return await _dbContext.Deliveries
+            .CountAsync(d => d.DateReceived >= fromInclusive && d.DateReceived <= toInclusive);
+    }
+
     public async Task CreateAsync(Delivery delivery)
     {
         _dbContext.Deliveries.Add(delivery);

@@ -93,4 +93,11 @@ public class DeliveryService : IDeliveryService
             
         };
     }
+
+    public async Task<int> DeliveryReceivedByMonthAsync()
+    {
+        var now = DateTime.UtcNow;
+        var from = now.AddMonths(-1);
+        return await _deliveryR.CountReceivedByDateRangeAsync(from, now);
+    }
 }

@@ -131,6 +131,15 @@ public class StockRepo : IStockRepo
             .ToListAsync();
         return answ;
     }
+
+    public async Task<decimal> GetDecommissionedAmountAsync(DateTime from)
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s => (s.Status == Stock.StockStatus.Decommissioned || s.Status == Stock.StockStatus.Expired)
+                        && s.ExpirationDate >= from)
+            .SumAsync(s => s.Count * s.ItemPrice);
+        return answ;
+    }
     
     public async Task<Stock?> GetByIdAsync(int id)
     {

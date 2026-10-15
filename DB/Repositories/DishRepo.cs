@@ -51,6 +51,17 @@ public class DishRepo : IDishRepo
         return answ;
     }
 
+    public async Task<List<Dish>> GetByIdsWithIngredientsAsync(List<int> ids)
+    {
+        var answ = await _dbContext.Dishes
+            .Where(d => ids.Contains(d.Id))
+            .Include(d => d.Ingredients)
+                .ThenInclude(i => i.Product)
+            .AsNoTracking()
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task UpdateRangeAsync(List<Dish> dishes)
     {
         _dbContext.Dishes.UpdateRange(dishes);

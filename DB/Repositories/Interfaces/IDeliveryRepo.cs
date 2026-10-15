@@ -8,6 +8,7 @@ public interface IDeliveryRepo
     Task<Delivery?> GetByIdAsync(int id);
     Task<Delivery?> GetByNumberAsync(string number);
     Task<List<Delivery>> GetByDateAsync(DateOnly date);
+    Task<List<Delivery>> GetAllWithDateRangeAsync(DateTime from, DateTime to);
     
     Task CreateAsync(Delivery delivery);
     Task UpdateAsync(Delivery delivery);

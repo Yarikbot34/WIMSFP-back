@@ -44,6 +44,15 @@ public class DeliveryRepo : IDeliveryRepo
         return answ;
     }
 
+    public async Task<List<Delivery>> GetAllWithDateRangeAsync(DateTime from, DateTime to)
+    {
+        var answ = await _dbContext.Deliveries
+            .Where(d => d.DateReceived >= from && d.DateReceived < to)
+            .AsNoTracking()
+            .ToListAsync();
+        return answ;
+    }
+
     public async Task CreateAsync(Delivery delivery)
     {
         _dbContext.Deliveries.Add(delivery);

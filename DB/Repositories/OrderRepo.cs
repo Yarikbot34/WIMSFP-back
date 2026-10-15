@@ -43,6 +43,37 @@ public class OrderRepo : IOrderRepo
         return answ;
     }
 
+    public async Task<List<Order>> GetCompletedWithDateRangeAsync(DateTime from, DateTime to)
+    {
+        var answ = await _dbContext.Orders
+            .Where(o => o.OrderStatus == Order.Status.Complete
+                        && o.Created >= from && o.Created < to)
+            .AsNoTracking()
+            .ToListAsync();
+        return answ;
+    }
+
+    public async Task<List<(string DishName, int SoldCount)>> GetTopDishesAsync(DateTime from, DateTime to, int count)
+    {
+        var answ = await _dbContext.OrderObjs
+            .Where(o => o.Order.OrderStatus == Order.Status.Complete
+                        && o.Order.Created >= from && o.Order.Created < to)
+            .GroupBy(o => o.Dish.Name)
+            .Select(group => new
+            {
+                DishName = group.Key,
+                SoldCount = group.Sum(o => o.Count)
+            })
+            .OrderByDescending(item => item.SoldCount)
+            .Take(count)
+            .AsNoTracking()
+            .ToListAsync();
+
+        return answ
+            .Select(item => (item.DishName, item.SoldCount))
+            .ToList();
+    }
+
     public async Task CreateAsync(Order order)
     {
         _dbContext.Orders.Add(order);

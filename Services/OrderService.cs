@@ -58,13 +58,8 @@ public class OrderService : IOrderService
                 .Where(d => d.Ingredients.Any(i => insufficientProductIdSet.Contains(i.ProductId)))
                 .ToList();
 
-            foreach (var dish in unavailableDishes)
-            {
-                dish.Available = false;
-            }
-
             if (unavailableDishes.Count > 0)
-                await _dishR.UpdateRangeAsync(unavailableDishes);
+                await _dishR.SetAvailabilityAsync(unavailableDishes);
         }
 
         var order = new Order
@@ -102,7 +97,13 @@ public class OrderService : IOrderService
             await _forecastS.RecalculateDishCountsAsync(consumedDishIds);
         }
 
-        if (order.OrderStatus == Order.Status.Cancelled) throw new Exception("Order cancelled");
+        if (order.OrderStatus == Order.Status.Cancelled)
+        {
+            var cancelledDishIds = dishes.Select(d => d.Id).Distinct().ToList();
+            await _forecastS.RecalculateDishCountsAsync(cancelledDishIds);
+            throw new Exception("Order cancelled");
+        }
+
         return new OrderDto(order);
     }
 

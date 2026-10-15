@@ -76,6 +76,37 @@ public class OrderRepo : IOrderRepo
 
     public async Task CreateAsync(Order order)
     {
+        var trackedDishes = new Dictionary<int, Dish>();
+
+        foreach (var orderObj in order.Objs)
+        {
+            var dishId = orderObj.DishId != 0 ? orderObj.DishId : orderObj.Dish.Id;
+
+            if (!trackedDishes.TryGetValue(dishId, out var trackedDish))
+            {
+                trackedDish = _dbContext.Dishes.Local.FirstOrDefault(d => d.Id == dishId);
+
+                if (trackedDish is null)
+                {
+                    var sourceDish = orderObj.Dish;
+                    trackedDish = new Dish
+                    {
+                        Id = dishId,
+                        Name = sourceDish.Name,
+                        ImageUrl = sourceDish.ImageUrl,
+                        Category = sourceDish.Category,
+                        Ingredients = new List<DishIngredient>()
+                    };
+                    _dbContext.Dishes.Attach(trackedDish);
+                }
+
+                trackedDishes.Add(dishId, trackedDish);
+            }
+
+            orderObj.DishId = dishId;
+            orderObj.Dish = trackedDish;
+        }
+
         _dbContext.Orders.Add(order);
         await _dbContext.SaveChangesAsync();
     }

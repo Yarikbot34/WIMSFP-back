@@ -41,12 +41,28 @@ public class DishRepo : IDishRepo
         return answ;
     }
 
+    public async Task SetAvailabilityAsync(List<Dish> dishes)
+    {
+        var dishIds = dishes.Select(d => d.Id).Distinct().ToList();
+        var tracked = await _dbContext.Dishes
+            .Where(d => dishIds.Contains(d.Id))
+            .ToListAsync();
+
+        foreach (var dish in tracked)
+        {
+            dish.Available = false;
+            _dbContext.Entry(dish).Property(d => d.Available).IsModified = true;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+
     public async Task<List<Dish>> GetByNamesWithIngredientsAsync(List<string> names)
     {
         var answ = await _dbContext.Dishes
             .Where(d => names.Contains(d.Name))
             .Include(d => d.Ingredients)
                 .ThenInclude(i => i.Product)
+            .AsNoTracking()
             .ToListAsync();
         return answ;
     }
@@ -64,7 +80,25 @@ public class DishRepo : IDishRepo
 
     public async Task UpdateRangeAsync(List<Dish> dishes)
     {
-        _dbContext.Dishes.UpdateRange(dishes);
+        foreach (var dish in dishes)
+        {
+            var trackedDish = _dbContext.Dishes.Local.FirstOrDefault(d => d.Id == dish.Id);
+            if (trackedDish is null)
+            {
+                trackedDish = new Dish
+                {
+                    Id = dish.Id,
+                    Name = dish.Name,
+                    ImageUrl = dish.ImageUrl,
+                    Category = dish.Category,
+                    Ingredients = new List<DishIngredient>()
+                };
+                _dbContext.Dishes.Attach(trackedDish);
+            }
+
+            trackedDish.CountCanPrepare = dish.CountCanPrepare;
+            _dbContext.Entry(trackedDish).Property(d => d.CountCanPrepare).IsModified = true;
+        }
         await _dbContext.SaveChangesAsync();
     }
 

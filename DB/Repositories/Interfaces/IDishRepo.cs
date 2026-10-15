@@ -10,6 +10,7 @@ public interface IDishRepo
     Task<Dish?> GetByNameAsync(string name);
     Task<List<Dish>> GetByIdsWithIngredientsAsync(List<int> ids);
     Task<List<Dish>> GetByNamesWithIngredientsAsync(List<string> names);
+    Task SetAvailabilityAsync(List<Dish> dishes);
     Task UpdateRangeAsync(List<Dish> dishes);
 
     Task CreateAsync(Dish dish);

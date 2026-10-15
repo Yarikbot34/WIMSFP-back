@@ -8,10 +8,12 @@ namespace WIMSFP.API;
 public class DashboardController : ControllerBase
 {
     private readonly IStatisticService _statisticService;
+    private readonly IForecastService _forecastService;
 
-    public DashboardController(IStatisticService statisticService)
+    public DashboardController(IStatisticService statisticService, IForecastService forecastService)
     {
         _statisticService = statisticService;
+        _forecastService = forecastService;
     }
 
     [HttpGet("HotOffers")]
@@ -39,6 +41,20 @@ public class DashboardController : ControllerBase
     public async Task<IActionResult> GetTopDishes()
     {
         var answ = await _statisticService.GetTopDishesAsync();
+        return Ok(answ);
+    }
+
+    [HttpGet("forecast/stoplist")]
+    public async Task<IActionResult> GetStopList()
+    {
+        var answ = await _forecastService.GetStopListAsync();
+        return Ok(answ);
+    }
+
+    [HttpGet("forecast/deliveryRecomend")]
+    public async Task<IActionResult> GetDeliveryRecommendations()
+    {
+        var answ = await _forecastService.GetDeliveryRecommendationsAsync();
         return Ok(answ);
     }
 }

@@ -12,4 +12,5 @@ public class Dish
     public bool Available { get; set; } = false;
     public bool HasAction { get; set; } = false;
     public decimal Price { get; set; } = 0;
+    public int CountCanPrepare { get; set; } = 0;
 }

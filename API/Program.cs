@@ -31,6 +31,7 @@ builder.Services.AddScoped<IDishPriorityService, DishPriorityService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStatisticService, StatisticService>();
+builder.Services.AddScoped<IForecastService, ForecastService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenCreator, TokenCreator>();
 

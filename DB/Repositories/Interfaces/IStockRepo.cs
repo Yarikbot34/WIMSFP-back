@@ -6,6 +6,7 @@ public interface IStockRepo
 {
     public Task<List<Stock>> GetByProductIdAsync(int productId, bool sortByExpirationDate = false);
     public Task<List<Stock>> GetAvailableAsync();
+    public Task<Dictionary<int, decimal>> GetAvailableAmountsByProductIdsAsync(List<int> productIds);
     public Task<List<Stock>> GetLastDayExpiredAsync();
     public Task<List<Stock>> GetExpiringSoonAsync();
     public Task<List<int>> TryConsumeAvailableAmountsAsync(Dictionary<int, decimal> requiredAmounts);

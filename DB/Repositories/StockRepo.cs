@@ -112,6 +112,20 @@ public class StockRepo : IStockRepo
         return answ;
     }
 
+    public async Task<Dictionary<int, decimal>> GetAvailableAmountsByProductIdsAsync(List<int> productIds)
+    {
+        var answ = await _dbContext.Stocks
+            .Where(s => productIds.Contains(s.ProductId)
+                        && s.Status == Stock.StockStatus.Active
+                        && s.ExpirationDate > DateTime.UtcNow
+                        && s.Count > 0)
+            .GroupBy(s => s.ProductId)
+            .Select(group => new { ProductId = group.Key, Amount = group.Sum(s => s.Count) })
+            .AsNoTracking()
+            .ToDictionaryAsync(item => item.ProductId, item => item.Amount);
+        return answ;
+    }
+
     public async Task<List<Stock>> GetExpiredActiveAsync()
     {
         var answ = await _dbContext.Stocks

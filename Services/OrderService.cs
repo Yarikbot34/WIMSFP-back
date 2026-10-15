@@ -10,12 +10,14 @@ public class OrderService : IOrderService
     private readonly IOrderRepo _orderR;
     private readonly IDishRepo _dishR;
     private readonly IStockRepo _stockR;
+    private readonly IForecastService _forecastS;
 
-    public OrderService(IOrderRepo orderR, IDishRepo dishR, IStockRepo stockR)
+    public OrderService(IOrderRepo orderR, IDishRepo dishR, IStockRepo stockR, IForecastService forecastS)
     {
         _orderR = orderR;
         _dishR = dishR;
         _stockR = stockR;
+        _forecastS = forecastS;
     }
 
     public async Task<OrderDto> MakeOrderAsync(OrderDto dto)
@@ -93,6 +95,13 @@ public class OrderService : IOrderService
         }
 
         await _orderR.CreateAsync(order);
+
+        if (order.OrderStatus == Order.Status.Complete)
+        {
+            var consumedDishIds = dishes.Select(d => d.Id).Distinct().ToList();
+            await _forecastS.RecalculateDishCountsAsync(consumedDishIds);
+        }
+
         if (order.OrderStatus == Order.Status.Cancelled) throw new Exception("Order cancelled");
         return new OrderDto(order);
     }

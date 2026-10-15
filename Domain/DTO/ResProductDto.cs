@@ -20,5 +20,6 @@ public class ResProductDto
         ProductName = stock.Product.Name;
         ExpirationDate = stock.ExpirationDate;
         Count = stock.Count;
+        ItemPrice = stock.ItemPrice;
     }
 }

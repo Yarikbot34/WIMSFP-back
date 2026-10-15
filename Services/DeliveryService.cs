@@ -70,6 +70,7 @@ public class DeliveryService : IDeliveryService
             {
                 Number = delivery.Number,
                 DateReceived = delivery.DateReceived,
+                Price = delivery.Price,
                 SupplierName =  delivery.Supplier.Name,
                 ReceivedProducts = stocks.Select( x => new ResProductDto(x)).ToList()
             });
@@ -89,6 +90,8 @@ public class DeliveryService : IDeliveryService
         {
             Number = delivery.Number,
             DateReceived = delivery.DateReceived,
+            Price = delivery.Price,
+            SupplierName = delivery.Supplier.Name,
             ReceivedProducts = stocks.Select(x => new ResProductDto(x)).ToList()
             
         };

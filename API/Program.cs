@@ -5,6 +5,7 @@ using DB.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Interfaces;
+using WIMSFP.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.SetupJWT();
 builder.Services.AddAuthentication();
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -67,6 +69,7 @@ await app.Services.SeedAdminAsync();
 
 app.UseCors("AllowAll");
 app.MapControllers();
+app.MapHub<DashboardHub>("/hubs/dashboard");
 app.UseSwagger();
 app.UseSwaggerUI();
 app.Run();

@@ -1,6 +1,8 @@
 using Domain.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Services.Interfaces;
+using WIMSFP.Hubs;
 
 namespace WIMSFP.API;
 
@@ -8,10 +10,12 @@ namespace WIMSFP.API;
 public class SupplyController : ControllerBase
 {
     private readonly IDeliveryService _deliveryService;
+    private readonly IHubContext<DashboardHub> _hubContext;
 
-    public SupplyController(IDeliveryService deliveryService)
+    public SupplyController(IDeliveryService deliveryService, IHubContext<DashboardHub> hubContext)
     {
         _deliveryService = deliveryService;
+        _hubContext = hubContext;
     }
 
     [HttpPost("AddDelivery")]
@@ -20,6 +24,7 @@ public class SupplyController : ControllerBase
         try
         {
             await _deliveryService.WriteDeliveryAsync(dto);
+            await DashboardHub.NotifyDataChangedAsync(_hubContext, "New delivery received");
             return Ok();
         } catch  (Exception ex)
         {

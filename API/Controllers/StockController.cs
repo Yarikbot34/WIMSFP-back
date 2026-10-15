@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Services.Interfaces;
+using WIMSFP.Hubs;
 
 namespace WIMSFP.API;
 
@@ -8,10 +10,12 @@ namespace WIMSFP.API;
 public class StockController : ControllerBase
 {
     private readonly IStockService _stockService;
+    private readonly IHubContext<DashboardHub> _hubContext;
 
-    public StockController(IStockService stockService)
+    public StockController(IStockService stockService, IHubContext<DashboardHub> hubContext)
     {
         _stockService = stockService;
+        _hubContext = hubContext;
     }
 
     [HttpGet("Sum")]
@@ -48,6 +52,7 @@ public class StockController : ControllerBase
         try
         {
             await _stockService.WriteOffStockAsync(id);
+            await DashboardHub.NotifyDataChangedAsync(_hubContext, "Stock written off");
             return Ok();
         }
         catch (Exception ex)

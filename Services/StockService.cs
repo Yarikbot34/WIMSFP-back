@@ -49,7 +49,7 @@ public class StockService : IStockService
 
     public async Task<List<StockDto>> GetExpiredSoonAsync()
     {
-        var stocks = await _stockR.GetExpiringSoonAsync();
+        var stocks = await _stockR.GetExpiringSoonOrExpiredNotDecommissionedAsync();
         return stocks.Select(s => new StockDto(s)).ToList();
     }
 

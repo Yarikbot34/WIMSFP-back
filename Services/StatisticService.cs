@@ -134,4 +134,14 @@ public class StatisticService : IStatisticService
             })
             .ToList();
     }
+
+    public async Task<int> GetExpiredSoonCountAsync()
+    {
+        return await _stockR.GetExpiringSoonCountAsync();
+    }
+
+    public async Task<int> GetExpiredCountAsync()
+    {
+        return await _stockR.GetExpiredNotDecommissionedCountAsync();
+    }
 }

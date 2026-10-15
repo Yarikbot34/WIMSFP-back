@@ -44,6 +44,20 @@ public class DashboardController : ControllerBase
         return Ok(answ);
     }
 
+    [HttpGet("GetExpiredSoonCount")]
+    public async Task<IActionResult> GetExpiredSoonCount()
+    {
+        var answ = await _statisticService.GetExpiredSoonCountAsync();
+        return Ok(answ);
+    }
+
+    [HttpGet("GetExpiredCount")]
+    public async Task<IActionResult> GetExpiredCount()
+    {
+        var answ = await _statisticService.GetExpiredCountAsync();
+        return Ok(answ);
+    }
+
     [HttpGet("forecast/stoplist")]
     public async Task<IActionResult> GetStopList()
     {

@@ -9,6 +9,9 @@ public interface IStockRepo
     public Task<Dictionary<int, decimal>> GetAvailableAmountsByProductIdsAsync(List<int> productIds);
     public Task<List<Stock>> GetLastDayExpiredAsync();
     public Task<List<Stock>> GetExpiringSoonAsync();
+    public Task<List<Stock>> GetExpiringSoonOrExpiredNotDecommissionedAsync();
+    public Task<int> GetExpiringSoonCountAsync();
+    public Task<int> GetExpiredNotDecommissionedCountAsync();
     public Task<List<int>> TryConsumeAvailableAmountsAsync(Dictionary<int, decimal> requiredAmounts);
     public Task<List<Stock>> GetExpiredActiveAsync();
     public Task<List<Stock>> GetExpiredAsync();

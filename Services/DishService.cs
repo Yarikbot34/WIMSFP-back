@@ -128,7 +128,7 @@ public class DishService : IDishService
             {
                 Dish = dish,
                 Product = pr,
-                Amount = (int)ingredient.Count
+                Amount = ingredient.Count
             });
         }
 

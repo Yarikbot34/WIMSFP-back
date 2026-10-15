@@ -8,4 +8,6 @@ public interface IStatisticService
     Task<List<MonthlyFinanceDto>> GetFinanceAnalyticsAsync();
     Task<DecommissionedStockDto> GetDecommissionedStockAsync();
     Task<List<TopDishDto>> GetTopDishesAsync();
+    Task<int> GetExpiredSoonCountAsync();
+    Task<int> GetExpiredCountAsync();
 }

@@ -88,17 +88,57 @@ public class StockRepo : IStockRepo
 
     public async Task<List<Stock>> GetExpiringSoonAsync()
     {
+        var now = DateTime.UtcNow;
+        var soonCutoff = now.AddDays(2);
+
         var answ = await _dbContext.Stocks
-            .Where(s =>
-            s.Status == Stock.StockStatus.Active &&
-            s.Count > 0 &&
-            s.ExpirationDate > DateTime.UtcNow &&
-            s.ExpirationDate - DateTime.UtcNow <= TimeSpan.FromDays(2))
+            .Where(s => s.Status == Stock.StockStatus.Active &&
+                        s.Count > 0 &&
+                        s.ExpirationDate > now &&
+                        s.ExpirationDate <= soonCutoff)
             .Include(s => s.Product)
             .Include(s => s.Delivery)
             .AsNoTracking()
             .ToListAsync();
         return answ;
+    }
+
+    public async Task<List<Stock>> GetExpiringSoonOrExpiredNotDecommissionedAsync()
+    {
+        var now = DateTime.UtcNow;
+        var soonCutoff = now.AddDays(2);
+
+        var answ = await _dbContext.Stocks
+            .Where(s => s.Count > 0 &&
+                        s.Status != Stock.StockStatus.Decommissioned &&
+                        s.ExpirationDate <= soonCutoff)
+            .Include(s => s.Product)
+            .Include(s => s.Delivery)
+            .AsNoTracking()
+            .ToListAsync();
+        return answ;
+    }
+
+    public async Task<int> GetExpiringSoonCountAsync()
+    {
+        var now = DateTime.UtcNow;
+        var soonCutoff = now.AddDays(2);
+
+        return await _dbContext.Stocks
+            .CountAsync(s => s.Status == Stock.StockStatus.Active &&
+                             s.Count > 0 &&
+                             s.ExpirationDate > now &&
+                             s.ExpirationDate <= soonCutoff);
+    }
+
+    public async Task<int> GetExpiredNotDecommissionedCountAsync()
+    {
+        var now = DateTime.UtcNow;
+
+        return await _dbContext.Stocks
+            .CountAsync(s => s.Status != Stock.StockStatus.Decommissioned &&
+                             s.Count > 0 &&
+                             s.ExpirationDate <= now);
     }
 
     public async Task<List<Stock>> GetAvailableAsync()

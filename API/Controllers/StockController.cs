@@ -34,4 +34,25 @@ public class StockController : ControllerBase
         var answ = await _stockService.GetExpiredAsync();
         return Ok(answ);
     }
+
+    [HttpGet("GetExpiredStoks")]
+    public async Task<IActionResult> GetExpiredStoks()
+    {
+        var answ = await _stockService.GetExpiredAsync();
+        return Ok(answ);
+    }
+
+    [HttpDelete("WriteOffStock/{id}")]
+    public async Task<IActionResult> WriteOffStock(int id)
+    {
+        try
+        {
+            await _stockService.WriteOffStockAsync(id);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

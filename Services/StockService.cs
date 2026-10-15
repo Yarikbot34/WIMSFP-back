@@ -1,4 +1,5 @@
 using DB.Repositories.Interfaces;
+using Domain.Class;
 using Domain.DTO;
 using Services.Interfaces;
 
@@ -57,5 +58,14 @@ public class StockService : IStockService
     {
         var stocks = await _stockR.GetExpiredAsync();
         return stocks.Select(s => new StockDto(s)).ToList();
+    }
+
+    public async Task WriteOffStockAsync(int id)
+    {
+        var stock = await _stockR.GetByIdAsync(id);
+        if (stock is null) throw new Exception("Stock not found");
+
+        stock.Status = Stock.StockStatus.Decommissioned;
+        await _stockR.UpdateAsync(stock);
     }
 }

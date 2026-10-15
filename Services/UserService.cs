@@ -16,6 +16,12 @@ public class UserService : IUserService
         _tokenCreator = tokenCreator;
     }
 
+    public async Task<List<UserDto>> GetUsersAsync()
+    {
+        var users = await _userR.GetAllAsync();
+        return users.Select(ToDto).ToList();
+    }
+
     public async Task CreateUserAsync(CreateUserDto dto)
     {
         var existing = await _userR.GetByNameAsync(dto.Name);
@@ -50,5 +56,14 @@ public class UserService : IUserService
         if (user is null) throw new Exception("User not found");
 
         await _userR.DeleteAsync(user);
+    }
+
+    private static UserDto ToDto(User user)
+    {
+        return new UserDto
+        {
+            Name = user.Name,
+            Role = user.Role.ToString()
+        };
     }
 }

@@ -8,7 +8,7 @@ namespace Services;
 
 public class StockExpirationService : BackgroundService
 {
-    private static readonly TimeSpan CheckInterval = TimeSpan.FromHours(3);
+    private static readonly TimeSpan CheckInterval = TimeSpan.FromMinutes(1);
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<StockExpirationService> _logger;

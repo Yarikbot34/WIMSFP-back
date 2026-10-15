@@ -15,6 +15,20 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    [HttpGet("getUsers")]
+    public async Task<IActionResult> GetUsers()
+    {
+        try
+        {
+            var answ = await _userService.GetUsersAsync();
+            return Ok(answ);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost("createUser")]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
     {

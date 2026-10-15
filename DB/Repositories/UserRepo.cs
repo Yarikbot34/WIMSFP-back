@@ -13,6 +13,12 @@ public class UserRepo : IUserRepo
         _dbContext = dbContext;
     }
 
+    public async Task<List<User>> GetAllAsync()
+    {
+        var answ = await _dbContext.Users.ToListAsync();
+        return answ;
+    }
+
     public async Task<User?> GetByNameAsync(string name)
     {
         var answ = await _dbContext.Users

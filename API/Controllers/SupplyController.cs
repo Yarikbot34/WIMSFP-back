@@ -23,6 +23,9 @@ public class SupplyController : ControllerBase
     {
         try
         {
+            if (dto.DateReceived > DateTime.UtcNow)
+                return BadRequest("Delivery date cannot be in the future");
+
             await _deliveryService.WriteDeliveryAsync(dto);
             await DashboardHub.NotifyDataChangedAsync(_hubContext, "New delivery received");
             return Ok();

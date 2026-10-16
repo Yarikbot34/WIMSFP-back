@@ -18,6 +18,7 @@ public class SupplierController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin,Acceptor")]
     public async Task<IActionResult> GetSupplierList()
     {
         var answ = await _supplierService.GetAllSuppliersAsync();

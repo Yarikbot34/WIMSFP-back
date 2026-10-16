@@ -7,6 +7,7 @@ namespace Domain.DTO;
 public class ResProductDto
 {
     public required string ProductName { get; set; }
+    public string Unit { get; set; }
     public DateTime ExpirationDate { get; set; }
     public decimal Count { get; set; }
     public decimal ItemPrice { get; set; }
@@ -18,8 +19,9 @@ public class ResProductDto
     public ResProductDto(Stock stock)
     {
         ProductName = stock.Product.Name;
+        Unit = stock.Product.MesUnit.ToString();
         ExpirationDate = stock.ExpirationDate;
-        Count = stock.Count;
+        Count = stock.InitialCount;
         ItemPrice = stock.ItemPrice;
     }
 }

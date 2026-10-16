@@ -42,6 +42,7 @@ builder.Services.AddHostedService<DishPriorityRecalculationService>();
 builder.SetupJWT();
 
 builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
@@ -68,6 +69,8 @@ using (var scope = app.Services.CreateScope())
 await app.Services.SeedAdminAsync();
 
 app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.MapHub<DashboardHub>("/hubs/dashboard");
 app.UseSwagger();

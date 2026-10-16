@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Services.Interfaces;
@@ -6,6 +7,7 @@ using WIMSFP.Hubs;
 namespace WIMSFP.API;
 
 [ApiController]
+[Authorize(Roles = "Admin,Manager,Acceptor")]
 [Route("api/v1/Stock")]
 public class StockController : ControllerBase
 {

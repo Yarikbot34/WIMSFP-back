@@ -1,5 +1,6 @@
 using Domain.Class;
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
@@ -29,6 +30,7 @@ public class ProductController : ControllerBase
         return Ok(Enum.GetNames(typeof(Product.Unit)).ToList());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("AddProduct")]
     public async Task<IActionResult> AddProduct([FromBody] ProductDto dto)
     {
@@ -43,6 +45,7 @@ public class ProductController : ControllerBase
         
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("Remove")]
     public async Task<IActionResult> RemoveProduct([FromBody] ProductDto dto)
     {

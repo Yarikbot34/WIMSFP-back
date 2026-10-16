@@ -1,4 +1,5 @@
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Services.Interfaces;
@@ -19,6 +20,7 @@ public class OrderController : ControllerBase
         _hubContext = hubContext;
     }
 
+    [AllowAnonymous]
     [HttpPost("makeOrder")]
     public async Task<IActionResult> MakeOrder([FromBody] OrderDto dto)
     {
@@ -34,6 +36,7 @@ public class OrderController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin,Manager,Waiter")]
     [HttpGet("getOrderList")]
     public async Task<IActionResult> GetOrderList()
     {

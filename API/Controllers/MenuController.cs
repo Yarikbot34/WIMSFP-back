@@ -1,10 +1,12 @@
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
 namespace WIMSFP.API;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/v1/menu")]
 public class MenuController : ControllerBase
 {

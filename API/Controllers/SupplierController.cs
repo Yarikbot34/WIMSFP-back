@@ -1,10 +1,12 @@
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
 namespace WIMSFP.API;
 
 [ApiController]
+[Authorize(Roles = "Admin")]
 [Route("api/v1/Suppliers")]
 public class SupplierController : ControllerBase
 {

@@ -1,4 +1,5 @@
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Services.Interfaces;
@@ -6,6 +7,7 @@ using WIMSFP.Hubs;
 
 namespace WIMSFP.API;
 
+[Authorize]
 [Route("api/v1/supply")]
 public class SupplyController : ControllerBase
 {
@@ -18,6 +20,7 @@ public class SupplyController : ControllerBase
         _hubContext = hubContext;
     }
 
+    [Authorize(Roles = "Admin,Acceptor")]
     [HttpPost("AddDelivery")]
     public async Task<IActionResult> WriteDeliveryAsync([FromBody]DeliveryDto dto)
     {
@@ -35,6 +38,7 @@ public class SupplyController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin,Acceptor,Manager")]
     [HttpGet("GetDeliveries")]
     public async Task<IActionResult> GetDeliveriesAsync()
     {
@@ -43,6 +47,7 @@ public class SupplyController : ControllerBase
         
     }
 
+    [Authorize(Roles = "Admin,Acceptor")]
     [HttpGet("DeliveryReceivedByMonth")]
     public async Task<IActionResult> DeliveryReceivedByMonth()
     {
@@ -50,6 +55,7 @@ public class SupplyController : ControllerBase
         return Ok(count);
     }
 
+    [Authorize(Roles = "Admin,Acceptor")]
     [HttpGet("GetDelivery/{number}")]
     public async Task<IActionResult> GetDeliveryByNumberAsync(string number)
     {

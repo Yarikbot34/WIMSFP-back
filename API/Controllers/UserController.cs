@@ -1,11 +1,13 @@
 using Domain.Class;
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
 namespace WIMSFP.API;
 
 [ApiController]
+[Authorize(Roles = "Admin")]
 [Route("api/v1/user")]
 public class UserController : ControllerBase
 {
@@ -50,6 +52,7 @@ public class UserController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {

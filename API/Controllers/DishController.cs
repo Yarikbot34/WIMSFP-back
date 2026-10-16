@@ -1,10 +1,12 @@
 using Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
 namespace WIMSFP.API;
 
 [ApiController]
+[Authorize(Roles = "Admin,Manager,Waiter")]
 [Route("api/v1/dish")]
 public class DishController : ControllerBase
 {
@@ -22,6 +24,7 @@ public class DishController : ControllerBase
         return Ok(dishes);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("AddDish")]
     public async Task<IActionResult> AddDishAsync([FromBody] DishBigDto dto)
     {
@@ -35,6 +38,7 @@ public class DishController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("UpdateDish")]
     public async Task<IActionResult> UpdateDishAsync([FromBody] DishBigDto dto)
     {
@@ -48,6 +52,7 @@ public class DishController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("ToggleAvailability")]
     public async Task<IActionResult> ToggleDishAvailabilityAsync([FromBody] string name)
     {

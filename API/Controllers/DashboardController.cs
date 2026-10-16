@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
 namespace WIMSFP.API;
 
 [ApiController]
+[Authorize(Roles = "Admin,Manager")]
 [Route("api/v1/dashboard")]
 public class DashboardController : ControllerBase
 {

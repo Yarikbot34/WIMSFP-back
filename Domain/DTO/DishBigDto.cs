@@ -10,6 +10,7 @@ public class DishBigDto
     public string Category { get; set; } = "";
     public decimal Price { get; set; }
     public bool Available { get; set; }
+    public bool HasActionByAdmin { get; set; }
     public List<DishIngredientDto> Ingredients { get; set; } = new();
     
     [JsonConstructor]

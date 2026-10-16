@@ -11,4 +11,5 @@ public interface IDishService
     Task AddDishAsync(DishBigDto dto);
     Task UpdateDishAsync(DishBigDto dto);
     Task ToggleDishAvailabilityAsync(string name);
+    Task ToggleDishActionByAdminAsync(string name);
 }

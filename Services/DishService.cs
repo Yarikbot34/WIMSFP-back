@@ -24,6 +24,9 @@ public class DishService : IDishService
     {
         var dishes =  await _dishR.GetAllAsync();
         var priorities = await _dishPriorityR.GetAllAsync();
+
+        var hasManualAction = dishes.Any(d => d.HasActionByAdmin);
+
         var popularDishIds = priorities
             .OrderByDescending(p => p.Priority)
             .Take(6)
@@ -33,9 +36,26 @@ public class DishService : IDishService
         var menuDto = new MenuDto();
         foreach (var dish in dishes)
         {
-            if (!dish.Available) menuDto.Inaccessible.Add(new DishDto(dish)); 
-            else if (popularDishIds.Contains(dish.Id)) menuDto.Popular.Add(new DishDto(dish));
-            else menuDto.Main.Add(new DishDto(dish));
+            if (!dish.Available)
+            {
+                menuDto.Inaccessible.Add(new DishDto(dish));
+            }
+            else if (dish.HasActionByAdmin)
+            {
+                menuDto.Popular.Add(new DishDto(dish));
+            }
+            else if (hasManualAction)
+            {
+                menuDto.Main.Add(new DishDto(dish));
+            }
+            else if (popularDishIds.Contains(dish.Id))
+            {
+                menuDto.Popular.Add(new DishDto(dish));
+            }
+            else
+            {
+                menuDto.Main.Add(new DishDto(dish));
+            }
         }
         return menuDto;
     }
@@ -74,6 +94,7 @@ public class DishService : IDishService
             Category = dto.Category,
             Description = dto.Description,
             Available = dto.Available,
+            HasActionByAdmin = dto.HasActionByAdmin,
             Price = dto.Price,
             Ingredients = new List<DishIngredient>()
         };
@@ -110,6 +131,7 @@ public class DishService : IDishService
         dish.Description = dto.Description;
         dish.Price = dto.Price;
         dish.Available = dto.Available;
+        dish.HasActionByAdmin = dto.HasActionByAdmin;
         dish.ImageUrl = dto.ImageUrl;
         dish.Category = dto.Category;
 
@@ -144,6 +166,15 @@ public class DishService : IDishService
         await _dishR.UpdateAsync(dish);
     }
 
+    public async Task ToggleDishActionByAdminAsync(string name)
+    {
+        var dish = await _dishR.GetByNameAsync(name);
+        if (dish is null) throw new Exception("Dish not found");
+
+        dish.HasActionByAdmin = !dish.HasActionByAdmin;
+        await _dishR.UpdateAsync(dish);
+    }
+
     private static DishBigDto ToBigDto(Dish dish)
     {
         return new DishBigDto
@@ -154,6 +185,7 @@ public class DishService : IDishService
             Category = dish.Category,
             Price = dish.Price,
             Available = dish.Available,
+            HasActionByAdmin = dish.HasActionByAdmin,
             Ingredients = dish.Ingredients
                 .Select(i => new DishIngredientDto
                 {

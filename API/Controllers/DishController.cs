@@ -65,4 +65,18 @@ public class DishController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("ToggleActionByAdmin")]
+    public async Task<IActionResult> ToggleDishActionByAdminAsync([FromBody] string name)
+    {
+        try
+        {
+            await _dishService.ToggleDishActionByAdminAsync(name);
+            return Ok();
+        } catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
